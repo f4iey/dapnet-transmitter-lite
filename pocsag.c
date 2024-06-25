@@ -389,7 +389,7 @@ void pcmEncodeTransmission(
 
 
 #define SAMPLE_RATE 22050
-#define BAUD_RATE 512
+#define BAUD_RATE 1200
 
 #define MIN_DELAY 1
 #define MAX_DELAY 10
@@ -489,7 +489,7 @@ int main() {
             (uint16_t*) malloc(sizeof(uint16_t) * silenceLength);
 
         bzero(silence, sizeof(uint16_t) * silenceLength);
-        fwrite(silence, sizeof(uint16_t), silenceLength, stdout);
+        //fwrite(silence, sizeof(uint16_t), silenceLength, stdout);
         free(silence);
     }
 }

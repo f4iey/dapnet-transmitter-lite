@@ -1,11 +1,4 @@
 #!/bin/zsh
-
-format_data() {
-   # takes dapnet messages, parse them and 
-   # puts then into RIC:MSG format
-
-}
-
 send_pocsag() {
    # sends audio though soundcard
    # via MPV

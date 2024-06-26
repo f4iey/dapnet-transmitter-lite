@@ -1,6 +1,8 @@
 import socket
 import time
-
+import os
+# init functions
+os.system("source ./dapnet.sh")
 # Server details
 HOST = "dapnet.afu.rwth-aachen.de"  # Replace with actual master IP address
 PORT = 43434

@@ -35,3 +35,17 @@ printf '11:good evening' > transmission.raw
 `pocsag` doesn't rely on any dependencies but the C standard libraries. Use
 `make` to compile, or run your own C compiler manually. Feel free to
 `sudo make install` if you want.
+
+---
+# DAPNET integration
+This section is about connecting the transmitter to send messages coming form the [dapnet](http://hampager.de) network.
+
+## Dependencies
+to make this work, you will need:
+1. `python`
+2. `ffmpeg`
+3. `mpv`
+## Test run
+edit the global variables CALLSIGN and PASSWORD according to your DAPNET transmitter credentials and run `python dapnet_messages.py`
+## RIC filtering
+Soon(tm)

@@ -42,7 +42,7 @@ This section is about connecting the transmitter to send messages coming form th
 
 ## Dependencies
 to make this work, you will need:
-1. `python`
+1. `python` and `RPi.GPIO` package
 2. `ffmpeg`
 3. `mpv`
 ## Test run

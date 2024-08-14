@@ -2,6 +2,7 @@ import socket
 import os
 import math
 import time
+
 # init functions
 os.system("source ./dapnet.sh")
 # Server details
@@ -12,6 +13,13 @@ TIMESLOTS = ''
 # Login credentials
 CALLSIGN = "your_callsign"
 AUTHKEY = "your_authkey"
+
+# PTT via GPIO
+import RPi.GPIO as GPIO
+PTT_PIN = 11
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(PIN, GPIO.OUT)
+GPIO.output(PIN, GPIO.HIGH) # change state according to ptt triggering
 
 def send_data(sock, data):
   """Sends data to the server."""
@@ -85,7 +93,10 @@ def main():
       # send single message to the phy layer
       if pocsag is not None: queue.update({pocsag["ric"]: pocsag["content"]})
       if get_timeslot() in TIMESLOTS and bool(queue): 
+        # PTT
+        GPIO.output(PIN, GPIO.LOW)
         os.system(f'send_pocsag "{make_batch_string(queue)}"')
+        GPIO.output(PIN, GPIO.HIGH)
         queue.clear()
 
 if __name__ == "__main__":

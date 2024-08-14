@@ -1,5 +1,7 @@
 import socket
 import os
+import math
+import time
 # init functions
 os.system("source ./dapnet.sh")
 # Server details
@@ -17,6 +19,12 @@ def send_data(sock, data):
 def receive_data(sock):
   """Receives data from the server."""
   return sock.recv(1024).decode()
+
+def get_timeslot():
+  """Returns the current timeslot"""
+  t = math.floor(time.time() / 100)
+  return hex((t >> 6) & 0xF).strip('0x').upper()
+
 
 def handle_message(message, sock):
   """Processes received messages and sends responses."""

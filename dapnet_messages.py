@@ -7,6 +7,7 @@ os.system("source ./dapnet.sh")
 # Server details
 HOST = "dapnet.afu.rwth-aachen.de"  # Replace with actual master IP address
 PORT = 43434
+TIMESLOTS = ''
 
 # Login credentials
 CALLSIGN = "your_callsign"
@@ -24,7 +25,6 @@ def get_timeslot():
   """Returns the current timeslot"""
   t = math.floor(time.time() / 100)
   return hex((t >> 6) & 0xF).strip('0x').upper()
-
 
 def handle_message(message, sock):
   """Processes received messages and sends responses."""
@@ -51,14 +51,21 @@ def handle_message(message, sock):
     return pocsag
   elif message.startswith("4"):
       # timeslots the transmitter is allowed to use
-      timeslots = message[2:]
+      TIMESLOTS = message[2:]
       send_data(sock, "+\r\n")
   else:
     # other message type, just respond with +
     send_data(sock, "+\r\n")
 
+def make_batch_string(queue):
+  """Create the batch string by appending to array"""
+  batch_str = ""
+  for ric in queue: batch_str += ric + ':' + queue[ric] + '\\n'
+  return batch_str
+
 def main():
   """Main function for login and communication loop."""
+  queue = {}
   sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
   sock.connect((HOST, PORT))
   print("connection established...")
@@ -76,8 +83,10 @@ def main():
       print(message)
       pocsag = handle_message(message, sock)
       # send single message to the phy layer
-      if pocsag is not None: os.system(f'send_pocsag "{pocsag["ric"]}:{pocsag["content"]}"')
-
+      if pocsag is not None: queue.update({pocsag["ric"]: pocsag["content"]})
+      if get_timeslot() in TIMESLOTS and bool(queue): 
+        os.system(f'send_pocsag "{make_batch_string(queue)}"')
+        queue.clear()
 
 if __name__ == "__main__":
   main()

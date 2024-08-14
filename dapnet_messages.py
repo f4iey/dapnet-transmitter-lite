@@ -3,8 +3,6 @@ import os
 import math
 import time
 
-# init functions
-os.system("source ./dapnet.sh")
 # Server details
 HOST = "dapnet.afu.rwth-aachen.de"  # Replace with actual master IP address
 PORT = 43434
@@ -31,7 +29,7 @@ def receive_data(sock):
 
 def get_timeslot():
   """Returns the current timeslot"""
-  t = math.floor(time.time() / 100)
+  t = math.floor(time.time() * 10)
   return hex((t >> 6) & 0xF).strip('0x').upper()
 
 def handle_message(message, sock):
@@ -68,7 +66,7 @@ def handle_message(message, sock):
 def make_batch_string(queue):
   """Create the batch string by appending to array"""
   batch_str = ""
-  for ric in queue: batch_str += ric + ':' + queue[ric] + '\\n'
+  for ric in queue: batch_str += str(ric) + ':' + queue[ric] + '\\n'
   return batch_str
 
 def main():
@@ -92,12 +90,12 @@ def main():
       pocsag = handle_message(message, sock)
       # send single message to the phy layer
       if pocsag is not None: queue.update({pocsag["ric"]: pocsag["content"]})
-      if get_timeslot() in TIMESLOTS and bool(queue): 
-        # PTT
-        GPIO.output(PTT_PIN, GPIO.LOW)
-        os.system(f'send_pocsag "{make_batch_string(queue)}"')
-        GPIO.output(PTT_PIN, GPIO.HIGH)
-        queue.clear()
+    if get_timeslot() in TIMESLOTS and bool(queue): 
+      # PTT
+      GPIO.output(PTT_PIN, GPIO.LOW)
+      os.system(f'source ./dapnet.sh && send_pocsag "{make_batch_string(queue)}"')
+      GPIO.output(PTT_PIN, GPIO.HIGH)
+      queue.clear()
 
 if __name__ == "__main__":
   main()

@@ -1,5 +1,5 @@
 import socket
-import os
+import subprocess as sp
 import math
 import time
 
@@ -93,7 +93,7 @@ def main():
     if get_timeslot() in TIMESLOTS and bool(queue): 
       # PTT
       GPIO.output(PTT_PIN, GPIO.LOW)
-      os.system(f'source ./dapnet.sh && send_pocsag "{make_batch_string(queue)}"')
+      sp.call(f'source ./dapnet.sh && send_pocsag "{make_batch_string(queue)}"', shell=True)
       GPIO.output(PTT_PIN, GPIO.HIGH)
       queue.clear()
 

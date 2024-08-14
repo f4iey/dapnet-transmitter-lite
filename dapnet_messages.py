@@ -18,8 +18,8 @@ AUTHKEY = "your_authkey"
 import RPi.GPIO as GPIO
 PTT_PIN = 11
 GPIO.setmode(GPIO.BOARD)
-GPIO.setup(PIN, GPIO.OUT)
-GPIO.output(PIN, GPIO.HIGH) # change state according to ptt triggering
+GPIO.setup(PTT_PIN, GPIO.OUT)
+GPIO.output(PTT_PIN, GPIO.HIGH) # change state according to ptt triggering
 
 def send_data(sock, data):
   """Sends data to the server."""
@@ -94,9 +94,9 @@ def main():
       if pocsag is not None: queue.update({pocsag["ric"]: pocsag["content"]})
       if get_timeslot() in TIMESLOTS and bool(queue): 
         # PTT
-        GPIO.output(PIN, GPIO.LOW)
+        GPIO.output(PTT_PIN, GPIO.LOW)
         os.system(f'send_pocsag "{make_batch_string(queue)}"')
-        GPIO.output(PIN, GPIO.HIGH)
+        GPIO.output(PTT_PIN, GPIO.HIGH)
         queue.clear()
 
 if __name__ == "__main__":

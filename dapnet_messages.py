@@ -29,7 +29,7 @@ def receive_data(sock):
 
 def get_timeslot():
   """Returns the current timeslot"""
-  t = math.floor(time.time() * 10)
+  t = math.floor(time.time() * 100)
   return hex((t >> 6) & 0xF).strip('0x').upper()
 
 def handle_message(message, sock):

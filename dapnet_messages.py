@@ -36,7 +36,7 @@ def get_timeslot():
 
 def handle_message(message, sock):
   """Processes received messages and sends responses."""
-
+  global TIMESLOTS
   if message.startswith("2"):
     # Server time received, respond with time and confirmation
     response = f"{message}:0000\r\n+\r\n"
